@@ -18,15 +18,29 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 public class DisplayDataListActivity extends Activity {
 
     /** ロガー */
     private Logger mLogger = new Logger(DisplayDataListActivity.class);
 
+    /** ADビュー */
+    private AdView mAdView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.display_data_list_activity);
+
+        // AdView をリソースとしてルックアップしてリクエストを読み込む
+        mAdView = (AdView)findViewById(R.id.adView);
+        AdRequest adRequest =
+                new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .build();
+        mAdView.loadAd(adRequest);
 
         List<Data> list = new ArrayList<Data>();
 
@@ -54,6 +68,15 @@ public class DisplayDataListActivity extends Activity {
         ListView listView = (ListView)findViewById(R.id.displayDataListView);
         listView.setAdapter(adapter);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        if (null != mAdView) {
+            mAdView.destroy();
+        }
+
+        super.onDestroy();
     }
 
     private void setData(List<Data> list, String name, String value) {

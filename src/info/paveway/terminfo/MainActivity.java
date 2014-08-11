@@ -25,7 +25,6 @@ public class MainActivity extends TabActivity {
         addTab(DisplayDataListActivity.class, "display", "Display", R.drawable.ic_tab_display);
         addTab(SensorDataListActivity.class,  "sensor",  "Sensor",  R.drawable.ic_tab_sensor);
         addTab(CameraDataListActivity.class,  "camera",  "Camera",  R.drawable.ic_tab_camera);
-
     }
 
     @SuppressWarnings("rawtypes")

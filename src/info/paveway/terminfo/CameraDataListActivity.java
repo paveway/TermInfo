@@ -17,15 +17,46 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
+/**
+ * 端末情報
+ * カメラデータリスト画面クラス
+ *
+ * @version 1.0 新規作成
+ * @author paveway.info@gmail.com
+ * Copyright (C) 2014 paveway.info. All rights reserved.
+ *
+ */
 public class CameraDataListActivity extends Activity {
 
     /** ロガー */
     private Logger mLogger = new Logger(CameraDataListActivity.class);
 
+    /** ADビュー */
+    private AdView mAdView;
+
+    /**
+     * 生成された時に呼び出される。
+     *
+     * @param savedInstanceState 保存した時のインスタンスの状態
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        // スーパークラスのメソッドを呼び出す。
         super.onCreate(savedInstanceState);
+
+        // レイアウトを設定する。
         setContentView(R.layout.camera_data_list_activity);
+
+        // AdView をリソースとしてルックアップしてリクエストを読み込む
+        mAdView = (AdView)findViewById(R.id.adView);
+        AdRequest adRequest =
+                new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .build();
+        mAdView.loadAd(adRequest);
 
         List<Data> list = new ArrayList<Data>();
 
@@ -106,6 +137,15 @@ public class CameraDataListActivity extends Activity {
         ListView listView = (ListView)findViewById(R.id.cameraDataListView);
         listView.setAdapter(adapter);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        if (null != mAdView) {
+            mAdView.destroy();
+        }
+
+        super.onDestroy();
     }
 
     private void setData(List<Data> list, String name, String value) {

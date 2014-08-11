@@ -14,12 +14,28 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 public class SystemDataListActivity extends Activity {
+
+    /** ADビュー */
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.system_data_list_activity);
+
+        // AdView をリソースとしてルックアップしてリクエストを読み込む
+        mAdView = (AdView)findViewById(R.id.adView);
+        AdRequest adRequest =
+                new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .build();
+        mAdView.loadAd(adRequest);
 
         List<Data> list = new ArrayList<Data>();
         setList(list, "ボード名称",                      Build.BOARD);
@@ -47,6 +63,15 @@ public class SystemDataListActivity extends Activity {
         ArrayAdapter<Data> adapter = new DataArrayAdapter(this, 0, list);
         ListView listView = (ListView)findViewById(R.id.systemDataListView);
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (null != mAdView) {
+            mAdView.destroy();
+        }
+
+        super.onDestroy();
     }
 
     private void setList(List<Data> list, String name, String value) {

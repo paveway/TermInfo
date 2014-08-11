@@ -18,7 +18,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 public class SensorDataListActivity extends Activity {
+
+    /** ADビュー */
+    private AdView mAdView;
 
     private static final Map<Integer, String> mSensorInfoMap3;
     private static final Map<Integer, String> mSensorInfoMap9;
@@ -62,6 +68,14 @@ public class SensorDataListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sensor_data_list_activity);
 
+        // AdView をリソースとしてルックアップしてリクエストを読み込む
+        mAdView = (AdView)findViewById(R.id.adView);
+        AdRequest adRequest =
+                new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .build();
+        mAdView.loadAd(adRequest);
+
         mSensorManager = (SensorManager)getSystemService(Activity.SENSOR_SERVICE);
 
         List<Data> list = new ArrayList<Data>();
@@ -74,6 +88,15 @@ public class SensorDataListActivity extends Activity {
         DataArrayAdapter adapter = new DataArrayAdapter(SensorDataListActivity.this, 0, list);
         ListView listView = (ListView)findViewById(R.id.sensorDataListView);
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (null != mAdView) {
+            mAdView.destroy();
+        }
+
+        super.onDestroy();
     }
 
     private void setList(List<Data> list, int apiLevel, Map<Integer, String> sensorMap) {
