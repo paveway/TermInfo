@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <issue id="InlinedApi">
+        <ignore path="src/info/paveway/terminfo/SensorDataListActivity.java" />
+    </issue>
     <issue id="UseSparseArrays">
+        <ignore path="src/info/paveway/terminfo/SensorDataListActivity.java" />
         <ignore path="src/info/paveway/terminfo/SensorInfoActivity.java" />
     </issue>
 </lint>

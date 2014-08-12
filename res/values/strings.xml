@@ -4,4 +4,14 @@
     <string name="app_name">端末情報</string>
     <string name="action_settings">設定</string>
 
+    <string name="tag_system">system</string>
+    <string name="tag_display">display</string>
+    <string name="tag_sensor">sensor</string>
+    <string name="tag_camera">camera</string>
+
+    <string name="label_system">System</string>
+    <string name="label_display">Display</string>
+    <string name="label_sensor">Sensor</string>
+    <string name="label_camera">Camera</string>
+
 </resources>

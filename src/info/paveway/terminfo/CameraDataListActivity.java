@@ -1,10 +1,11 @@
 package info.paveway.terminfo;
 
-import java.util.ArrayList;
+import info.paveway.log.Logger;
+import info.paveway.util.ClassUtil;
+
 import java.util.List;
 
-import android.app.Activity;
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
@@ -12,13 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 
 /**
  * 端末情報
@@ -29,13 +24,10 @@ import com.google.android.gms.ads.AdView;
  * Copyright (C) 2014 paveway.info. All rights reserved.
  *
  */
-public class CameraDataListActivity extends Activity {
+public class CameraDataListActivity extends AbstractBaseListActivity {
 
     /** ロガー */
     private Logger mLogger = new Logger(CameraDataListActivity.class);
-
-    /** ADビュー */
-    private AdView mAdView;
 
     /**
      * 生成された時に呼び出される。
@@ -43,22 +35,36 @@ public class CameraDataListActivity extends Activity {
      * @param savedInstanceState 保存した時のインスタンスの状態
      */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        mLogger.d("IN");
+
         // スーパークラスのメソッドを呼び出す。
         super.onCreate(savedInstanceState);
 
-        // レイアウトを設定する。
-        setContentView(R.layout.camera_data_list_activity);
+        mLogger.d("OUT(OK)");
+    }
 
-        // AdView をリソースとしてルックアップしてリクエストを読み込む
-        mAdView = (AdView)findViewById(R.id.adView);
-        AdRequest adRequest =
-                new AdRequest.Builder()
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .build();
-        mAdView.loadAd(adRequest);
+    /**
+     * 終了した時に呼び出される。
+     */
+    @Override
+    public void onDestroy() {
+        mLogger.d("IN");
 
-        List<Data> list = new ArrayList<Data>();
+        // スーパークラスのメソッドを呼び出す。
+        super.onDestroy();
+
+        mLogger.d("OUT(OK)");
+    }
+
+    /**
+     * リストデータを設定する。
+     *
+     * @param list リスト
+     */
+    @Override
+    protected void setListData(List<Data> list) {
+        mLogger.d("IN");
 
         int numberOfCameras = Camera.getNumberOfCameras();
         for (int i = 0; i < numberOfCameras; i++) {
@@ -133,22 +139,54 @@ public class CameraDataListActivity extends Activity {
             setData(list, params, "ビデオ安定化",               "getVideoStabilization",       15);
         }
 
-        ArrayAdapter<Data> adapter = new DataArrayAdapter(this, 0, list);
-        ListView listView = (ListView)findViewById(R.id.cameraDataListView);
-        listView.setAdapter(adapter);
-
+        mLogger.d("OUT(OK)");
     }
 
+    /**
+     * ビューを設定する。
+     *
+     * @param convertView ビュー
+     * @param data データ
+     */
+    @SuppressLint("InflateParams")
     @Override
-    public void onDestroy() {
-        if (null != mAdView) {
-            mAdView.destroy();
-        }
+    protected View getConvertView(LayoutInflater layoutInflator) {
+        mLogger.d("IN");
 
-        super.onDestroy();
+        mLogger.d("OUT(OK)");
+        return layoutInflator.inflate(R.layout.row_camera_data, null);
     }
 
-    private void setData(List<Data> list, String name, String value) {
+    /**
+     * ビューを設定する。
+     *
+     * @param convertView ビュー
+     * @param data データ
+     */
+    @Override
+    protected void setConvertView(View convertView, Data data) {
+        mLogger.d("IN");
+
+        TextView name = (TextView)convertView.findViewById(R.id.cameraDataRowName);
+        name.setText(data.getName());
+
+        TextView valueLabel = (TextView)convertView.findViewById(R.id.cameraDataRowValue);
+        valueLabel.setText(data.getValue());
+
+        mLogger.d("OUT(OK)");
+    }
+
+    /**
+     * データを設定する。
+     *
+     * @param list リスト
+     * @param name 名前
+     * @param value 値
+     */
+    @Override
+    protected void setData(List<Data> list, String name, String value) {
+        mLogger.d("IN");
+
         Data data = new Data();
 
         data.setName(name);
@@ -160,72 +198,109 @@ public class CameraDataListActivity extends Activity {
         }
 
         list.add(data);
+        mLogger.d("OUT(OK)");
     }
 
+    /**
+     * データを設定する。
+     *
+     * @param list リスト
+     * @param name 名前
+     * @param size サイズ
+     */
     private void setData(List<Data> list, String name, Camera.Size size) {
+        mLogger.d("IN");
+
         Data data = new Data();
 
         data.setName(name);
         data.setValue(String.valueOf(size.width) + "x" + String.valueOf(size.height));
 
         list.add(data);
+        mLogger.d("OUT(OK)");
     }
 
+    /**
+     * データを設定する。
+     *
+     * @param list リスト
+     * @param params パラメータ
+     * @param name 名前
+     * @param method メソッド
+     * @param apiLevel APIレベル
+     */
     private void setData(List<Data> list, Camera.Parameters params, String name, String method, int apiLevel) {
+        mLogger.d("IN");
+
         Data data = new Data();
         data.setName(name);
+        String value = "未設定";
         if (apiLevel <= Build.VERSION.SDK_INT) {
             Object result = ClassUtil.invokeMethod(params, method, null, null);
             if (null != result) {
                 if (String.class != result.getClass()) {
                     if (Boolean.class == result.getClass()) {
-                        data.setValue(((Boolean)result) ? "YES" : "NO");
+                        value = (Boolean)result ? "YES" : "NO";
                     } else {
-                        data.setValue(String.valueOf(result));
+                        value = String.valueOf(result);
                     }
 
                 } else if (String.class == result.getClass()){
-                    data.setValue((String)result);
-
-                } else {
-                    data.setValue("未設定");
+                    value = (String)result;
                 }
-
-            } else {
-                data.setValue("未設定");
             }
 
         } else {
-            data.setValue("未対応");
+            value = "未対応";
         }
+        data.setValue(value);
 
         list.add(data);
+        mLogger.d("OUT(OK)");
     }
 
+    /**
+     * サイズデータを設定する。
+     *
+     * @param list リスト
+     * @param params パラメータ
+     * @param name 名前
+     * @param method メソッド
+     * @param apiLevel APIレベル
+     */
     private void setDataSize(List<Data> list, Camera.Parameters params, String name, String method, int apiLevel) {
+        mLogger.d("IN");
+
         Data data = new Data();
         data.setName(name);
 
+        String value = "未設定";
         if (apiLevel <= Build.VERSION.SDK_INT) {
             Object result = ClassUtil.invokeMethod(params, method, null, null);
             if ((null != result) && (Camera.Size.class == result.getClass())){
                 Camera.Size size = (Camera.Size)result;
-                data.setValue(String.valueOf(size.width) + "x" + String.valueOf(size.height));
-
-            } else {
-                data.setValue("未設定");
+                value = String.valueOf(size.width) + "x" + String.valueOf(size.height);
             }
 
         } else {
             data.setValue("未対応");
         }
+        data.setValue(value);
 
         list.add(data);
+        mLogger.d("OUT(OK)");
     }
 
-
-
+    /**
+     * イメージフォーマット文字列を返却する。
+     *
+     * @param imageFormat イメージフォーマット
+     * @return イメージフォーマット文字列
+     */
     private String getImageFormatString(int imageFormat) {
+        mLogger.d("IN");
+
+        mLogger.d("OUT(OK)");
         switch (imageFormat) {
         case ImageFormat.JPEG:        return "JPEG";
         case ImageFormat.NV16:        return "NV16";
@@ -235,56 +310,6 @@ public class CameraDataListActivity extends Activity {
         case ImageFormat.YUY2:        return "YUY2";
         case ImageFormat.YV12:        return "YV12";
         default:                      return "UNKNOWN";
-        }
-    }
-
-    private class Data {
-
-        private String mName;
-
-        private String mValue;
-
-        public void setName(String name) {
-            mName = name;
-        }
-
-        public String getName() {
-            return mName;
-        }
-
-        public void setValue(String value) {
-            mValue = value;
-        }
-
-        public String getValue() {
-            return mValue;
-        }
-    }
-
-    private class DataArrayAdapter extends ArrayAdapter<Data> {
-
-        private LayoutInflater mLayoutInflater;
-
-        public DataArrayAdapter(Context context, int resource, List<Data> objects) {
-            super(context, resource, objects);
-
-            mLayoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (null == convertView) {
-                convertView = mLayoutInflater.inflate(R.layout.camera_data_row, null);
-            }
-
-            Data data = (Data)getItem(position);
-            TextView name = (TextView)convertView.findViewById(R.id.cameraDataRowName);
-            name.setText(data.getName());
-
-            TextView valueLabel = (TextView)convertView.findViewById(R.id.cameraDataRowValue);
-            valueLabel.setText(data.getValue());
-
-            return convertView;
         }
     }
 }

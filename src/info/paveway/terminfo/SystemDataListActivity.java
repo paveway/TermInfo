@@ -1,133 +1,123 @@
 package info.paveway.terminfo;
 
-import java.util.ArrayList;
+import info.paveway.log.Logger;
+
 import java.util.List;
 
-import android.app.Activity;
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+/**
+ * 端末情報
+ * システムデータリスト画面クラス
+ *
+ * @version 1.0 新規作成
+ * @author paveway.info@gmail.com
+ * Copyright (C) 2014 paveway.info. All rights reserved.
+ *
+ */
+public class SystemDataListActivity extends AbstractBaseListActivity {
 
-public class SystemDataListActivity extends Activity {
+    /** ロガー */
+    private Logger mLogger = new Logger(SystemDataListActivity.class);
 
-    /** ADビュー */
-    private AdView mAdView;
-
+    /**
+     * 生成された時に呼び出される。
+     *
+     * @param savedInstanceState 保存した時のインスタンスの状態
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mLogger.d("IN");
 
+        // スーパークラスのメソッドを呼び出す。
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.system_data_list_activity);
-
-        // AdView をリソースとしてルックアップしてリクエストを読み込む
-        mAdView = (AdView)findViewById(R.id.adView);
-        AdRequest adRequest =
-                new AdRequest.Builder()
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .build();
-        mAdView.loadAd(adRequest);
-
-        List<Data> list = new ArrayList<Data>();
-        setList(list, "ボード名称",                      Build.BOARD);
-        setList(list, "ブートローダーバージョン番号",    Build.BOOTLOADER);
-        setList(list, "ブランド名",                      Build.BRAND);
-        setList(list, "ネイティブコードの命令セット",    Build.CPU_ABI);
-        setList(list, "ネイティブコードの第2命令セット", Build.CPU_ABI2);
-        setList(list, "デバイス名",                      Build.DEVICE);
-        setList(list, "ビルドID",                        Build.DISPLAY);
-        setList(list, "識別子",                          Build.FINGERPRINT);
-        setList(list, "ハードウェア名",                  Build.HARDWARE);
-        setList(list, "ホスト名",                        Build.HOST);
-        setList(list, "変更番号",                        Build.ID);
-        setList(list, "製造者名",                        Build.MANUFACTURER);
-        setList(list, "モデル名",                        Build.MODEL);
-        setList(list, "製品名",                          Build.PRODUCT);
-        setList(list, "ビルドタグ名",                    Build.TAGS);
-        setList(list, "ビルドタイプ",                    Build.TYPE);
-        setList(list, "ユーザ情報",                      Build.USER);
-        setList(list, "開発コードネーム",                Build.VERSION.CODENAME);
-        setList(list, "ソースコード管理番号",            Build.VERSION.INCREMENTAL);
-        setList(list, "バージョン番号",                  Build.VERSION.RELEASE);
-        setList(list, "フレームワークバージョン情報",    String.valueOf(Build.VERSION.SDK_INT));
-
-        ArrayAdapter<Data> adapter = new DataArrayAdapter(this, 0, list);
-        ListView listView = (ListView)findViewById(R.id.systemDataListView);
-        listView.setAdapter(adapter);
+        mLogger.d("OUT(OK)");
     }
 
+    /**
+     * 終了した時に呼び出される。
+     */
     @Override
     public void onDestroy() {
-        if (null != mAdView) {
-            mAdView.destroy();
-        }
+        mLogger.d("IN");
 
+        // スーパークラスのメソッドを呼び出す。
         super.onDestroy();
+
+        mLogger.d("OUT(OK)");
     }
 
-    private void setList(List<Data> list, String name, String value) {
-        Data data = new Data();
-        data.setName(name);
-        data.setValue(value);
-        list.add(data);
+    /**
+     * リストデータを設定する。
+     *
+     * @param list リスト
+     */
+    @Override
+    protected void setListData(List<Data> list) {
+        mLogger.d("IN");
+
+        setData(list, "ボード名称",                      Build.BOARD);
+        setData(list, "ブートローダーバージョン番号",    Build.BOOTLOADER);
+        setData(list, "ブランド名",                      Build.BRAND);
+        setData(list, "ネイティブコードの命令セット",    Build.CPU_ABI);
+        setData(list, "ネイティブコードの第2命令セット", Build.CPU_ABI2);
+        setData(list, "デバイス名",                      Build.DEVICE);
+        setData(list, "ビルドID",                        Build.DISPLAY);
+        setData(list, "識別子",                          Build.FINGERPRINT);
+        setData(list, "ハードウェア名",                  Build.HARDWARE);
+        setData(list, "ホスト名",                        Build.HOST);
+        setData(list, "変更番号",                        Build.ID);
+        setData(list, "製造者名",                        Build.MANUFACTURER);
+        setData(list, "モデル名",                        Build.MODEL);
+        setData(list, "製品名",                          Build.PRODUCT);
+        setData(list, "ビルドタグ名",                    Build.TAGS);
+        setData(list, "ビルドタイプ",                    Build.TYPE);
+        setData(list, "ユーザ情報",                      Build.USER);
+        setData(list, "開発コードネーム",                Build.VERSION.CODENAME);
+        setData(list, "ソースコード管理番号",            Build.VERSION.INCREMENTAL);
+        setData(list, "バージョン番号",                  Build.VERSION.RELEASE);
+        setData(list, "フレームワークバージョン情報",    String.valueOf(Build.VERSION.SDK_INT));
+
+        mLogger.d("OUT(OK)");
     }
 
-    private class Data {
+    /**
+     * ビューを設定する。
+     *
+     * @param convertView ビュー
+     * @param data データ
+     */
+    @SuppressLint("InflateParams")
+    @Override
+    protected View getConvertView(LayoutInflater layoutInflator) {
+        mLogger.d("IN");
 
-        private String mName;
-
-        private String mValue;
-
-        public void setName(String name) {
-            mName = name;
-        }
-
-        public String getName() {
-            return mName;
-        }
-
-        public void setValue(String value) {
-            mValue = value;
-        }
-
-        public String getValue() {
-            return mValue;
-        }
+        mLogger.d("OUT(OK)");
+        return layoutInflator.inflate(R.layout.row_system_data, null);
     }
 
-    private class DataArrayAdapter extends ArrayAdapter<Data> {
+    /**
+     * ビューを設定する。
+     *
+     * @param convertView ビュー
+     * @param data データ
+     */
+    @Override
+    protected void setConvertView(View convertView, Data data) {
+        mLogger.d("IN");
 
-        private LayoutInflater mLayoutInflater;
+        TextView name = (TextView)convertView.findViewById(R.id.systemDataRowName);
+        name.setText(data.getName());
 
-        public DataArrayAdapter(Context context, int resource, List<Data> objects) {
-            super(context, resource, objects);
+        TextView value = (TextView)convertView.findViewById(R.id.systemDataRowValue);
+        value.setText(data.getValue());
 
-            mLayoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (null == convertView) {
-                convertView = mLayoutInflater.inflate(R.layout.system_data_row, null);
-            }
-
-            Data data = (Data)getItem(position);
-            TextView name = (TextView)convertView.findViewById(R.id.systemDataRowName);
-            name.setText(data.getName());
-
-            TextView value = (TextView)convertView.findViewById(R.id.systemDataRowValue);
-            value.setText(data.getValue());
-
-            return convertView;
-        }
+        mLogger.d("OUT(OK)");
     }
 }
