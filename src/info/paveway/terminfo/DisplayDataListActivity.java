@@ -6,16 +6,12 @@ import info.paveway.util.StringUtil;
 
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 
 /**
  * 端末情報
@@ -86,40 +82,6 @@ public class DisplayDataListActivity extends AbstractBaseListActivity {
         setDataSize(    list, display, "サイズ(幅x高さ)",     "getSize",     13);
         setData(        list, display, "名称",                "getName",     17);
         setDataSize(    list, display, "実サイズ(幅x高さ)",   "getRealSize", 17);
-        mLogger.d("OUT(OK)");
-    }
-
-    /**
-     * ビューを設定する。
-     *
-     * @param convertView ビュー
-     * @param data データ
-     */
-    @SuppressLint("InflateParams")
-    @Override
-    protected View getConvertView(LayoutInflater layoutInflator) {
-        mLogger.d("IN");
-
-        mLogger.d("OUT(OK)");
-        return layoutInflator.inflate(R.layout.row_display_data, null);
-    }
-
-    /**
-     * ビューを設定する。
-     *
-     * @param convertView ビュー
-     * @param data データ
-     */
-    @Override
-    protected void setConvertView(View convertView, Data data) {
-        mLogger.d("IN");
-
-        TextView name = (TextView)convertView.findViewById(R.id.displayDataRowName);
-        name.setText(data.getName());
-
-        TextView valueLabel = (TextView)convertView.findViewById(R.id.displayDataRowValue);
-        valueLabel.setText(data.getValue());
-
         mLogger.d("OUT(OK)");
     }
 

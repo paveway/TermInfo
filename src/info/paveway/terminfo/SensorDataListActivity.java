@@ -164,18 +164,15 @@ public class SensorDataListActivity extends AbstractBaseListActivity {
         for (Integer type : sensorMap.keySet()) {
             Data data = new Data();
             data.setName(sensorMap.get(type));
+            boolean value = false;
             if (apiLevel <= Build.VERSION.SDK_INT) {
                 List<Sensor> sensorList = mSensorManager.getSensorList(type);
                 if (0 < sensorList.size()) {
-                    data.setValue(String.valueOf(true));
-
-                } else {
-                    data.setValue(String.valueOf(false));
+                    value = true;
                 }
-
-            } else {
-                data.setValue(String.valueOf(false));
             }
+            data.setValue(String.valueOf(value));
+
             list.add(data);
         }
 

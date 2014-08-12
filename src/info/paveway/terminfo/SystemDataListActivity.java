@@ -4,12 +4,8 @@ import info.paveway.log.Logger;
 
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 
 /**
  * 端末情報
@@ -83,40 +79,6 @@ public class SystemDataListActivity extends AbstractBaseListActivity {
         setData(list, "ソースコード管理番号",            Build.VERSION.INCREMENTAL);
         setData(list, "バージョン番号",                  Build.VERSION.RELEASE);
         setData(list, "フレームワークバージョン情報",    String.valueOf(Build.VERSION.SDK_INT));
-
-        mLogger.d("OUT(OK)");
-    }
-
-    /**
-     * ビューを設定する。
-     *
-     * @param convertView ビュー
-     * @param data データ
-     */
-    @SuppressLint("InflateParams")
-    @Override
-    protected View getConvertView(LayoutInflater layoutInflator) {
-        mLogger.d("IN");
-
-        mLogger.d("OUT(OK)");
-        return layoutInflator.inflate(R.layout.row_system_data, null);
-    }
-
-    /**
-     * ビューを設定する。
-     *
-     * @param convertView ビュー
-     * @param data データ
-     */
-    @Override
-    protected void setConvertView(View convertView, Data data) {
-        mLogger.d("IN");
-
-        TextView name = (TextView)convertView.findViewById(R.id.systemDataRowName);
-        name.setText(data.getName());
-
-        TextView value = (TextView)convertView.findViewById(R.id.systemDataRowValue);
-        value.setText(data.getValue());
 
         mLogger.d("OUT(OK)");
     }

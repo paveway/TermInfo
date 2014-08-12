@@ -8,6 +8,7 @@ import java.util.List;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * 端末情報
@@ -151,12 +153,18 @@ public abstract class AbstractBaseListActivity extends Activity {
     protected abstract void setListData(List<Data> list);
 
     /**
-     * ビューを取得する。
+     * ビューを設定する。
      *
-     * @param layoutInflator レイアウトインフレータ
-     * @return ビュー
+     * @param convertView ビュー
+     * @param data データ
      */
-    protected abstract View getConvertView(LayoutInflater layoutInflator);
+    @SuppressLint("InflateParams")
+    protected View getConvertView(LayoutInflater layoutInflator) {
+        mLogger.d("IN");
+
+        mLogger.d("OUT(OK)");
+        return layoutInflator.inflate(R.layout.row_data, null);
+    }
 
     /**
      * ビューを設定する。
@@ -164,7 +172,17 @@ public abstract class AbstractBaseListActivity extends Activity {
      * @param convertView ビュー
      * @param data データ
      */
-    protected abstract void setConvertView(View convertView, Data data);
+    protected void setConvertView(View convertView, Data data) {
+        mLogger.d("IN");
+
+        TextView name = (TextView)convertView.findViewById(R.id.rowDataName);
+        name.setText(data.getName());
+
+        TextView value = (TextView)convertView.findViewById(R.id.rowDataValue);
+        value.setText(data.getValue());
+
+        mLogger.d("OUT(OK)");
+    }
 
     /*************************************************************************/
     /**

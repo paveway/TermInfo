@@ -5,15 +5,11 @@ import info.paveway.util.ClassUtil;
 
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 
 /**
  * 端末情報
@@ -138,40 +134,6 @@ public class CameraDataListActivity extends AbstractBaseListActivity {
             // API Level 15
             setData(list, params, "ビデオ安定化",               "getVideoStabilization",       15);
         }
-
-        mLogger.d("OUT(OK)");
-    }
-
-    /**
-     * ビューを設定する。
-     *
-     * @param convertView ビュー
-     * @param data データ
-     */
-    @SuppressLint("InflateParams")
-    @Override
-    protected View getConvertView(LayoutInflater layoutInflator) {
-        mLogger.d("IN");
-
-        mLogger.d("OUT(OK)");
-        return layoutInflator.inflate(R.layout.row_camera_data, null);
-    }
-
-    /**
-     * ビューを設定する。
-     *
-     * @param convertView ビュー
-     * @param data データ
-     */
-    @Override
-    protected void setConvertView(View convertView, Data data) {
-        mLogger.d("IN");
-
-        TextView name = (TextView)convertView.findViewById(R.id.cameraDataRowName);
-        name.setText(data.getName());
-
-        TextView valueLabel = (TextView)convertView.findViewById(R.id.cameraDataRowValue);
-        valueLabel.setText(data.getValue());
 
         mLogger.d("OUT(OK)");
     }
