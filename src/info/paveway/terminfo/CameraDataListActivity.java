@@ -90,10 +90,11 @@ public class CameraDataListActivity extends AbstractBaseListActivity {
                 Data dataError = new Data();
                 dataError.setName("エラー");
                 dataError.setValue("カメラ情報が取得できません");
-                list.add(data);
+                list.add(dataError);
 
                 continue;
             }
+
             Camera.Parameters params = camera.getParameters();
             // API Level 1
             setData(list, "画像フォーマット",              String.valueOf(params.getPictureFormat()));
